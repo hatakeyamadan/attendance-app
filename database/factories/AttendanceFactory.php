@@ -24,6 +24,7 @@ class AttendanceFactory extends Factory
         } while ($dayOfWeek >= 6);
 
         return [
+            'user_id' => User::factory(),
             'date' => $date->format('Y-m-d'),
             'clock_in' => '09:00:00',
             'clock_out' => '18:00:00',

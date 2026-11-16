@@ -4,6 +4,9 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use App\Models\Attendance;
+use App\Models\Rest;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,11 +15,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        $this->call([
+            UserSeeder::class,
+        ]);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        $users = User::all();
+
+        foreach ($users as $user) {
+            Attendance::factory()
+                ->count(75) // 例: 平日75日分
+                ->create([
+                    'user_id' => $user->id,
+                ])
+                ->each(function ($attendance) {
+                    Rest::factory()->create([
+                        'attendance_id' => $attendance->id,
+                    ]);
+                });
+        }
     }
 }
